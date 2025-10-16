@@ -6,36 +6,28 @@ import random
 
 def main():
     """
-    Simulates a complex biomedical task, accepting a molecule ID from the
-    command line, simulating a long-running computation, and printing a JSON
-    result to stdout.
+    Parses command-line arguments, simulates a long-running task,
+    and prints a JSON result to standard output.
     """
-    parser = argparse.ArgumentParser(description="Simulated biomedical compute task.")
-    parser.add_argument(
-        "molecule_id",
-        type=str,
-        help="The identifier for the molecule to be analyzed."
-    )
+    parser = argparse.ArgumentParser(description='Simulate a complex biomedical task.')
+    parser.add_argument('molecule_id', type=str, help='The ID of the molecule to analyze.')
     args = parser.parse_args()
 
-    molecule_id = args.molecule_id
+    if not args.molecule_id:
+        print("Error: molecule_id argument is required.", file=sys.stderr)
+        sys.exit(1)
 
-    # The argparse setup ensures that if the argument is not provided,
-    # it will exit before this point with an informative error message.
-    # However, an explicit check can be added if needed.
-
-    print(f"Starting analysis for {molecule_id}...")
+    print(f"Starting analysis for {args.molecule_id}...")
 
     # Simulate a long-running task
     sleep_duration = random.randint(10, 15)
-    print(f"Simulating computation for {sleep_duration} seconds...")
     time.sleep(sleep_duration)
 
     print("Computation complete.")
 
-    # Prepare the structured JSON output
-    output_data = {
-        "molecule_id": molecule_id,
+    # Prepare the structured result
+    result = {
+        "molecule_id": args.molecule_id,
         "status": "SUCCESS",
         "data": {
             "screening_result": f"High Affinity (DO Score {random.randint(80, 95)}%)"
@@ -43,7 +35,7 @@ def main():
     }
 
     # Output the result as a single-line JSON string
-    print(json.dumps(output_data))
+    print(json.dumps(result))
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
